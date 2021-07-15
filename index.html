@@ -131,7 +131,7 @@
             // alert('您的位置：' + r.point.lng + ',' + r.point.lat);
 
             marker.enableDragging(); //标注可拖拽
-            local.search("写字楼");
+            local.search("写字楼", r.point, 100);
         }
     }, {enableHighAccuracy: true});
 </script>
