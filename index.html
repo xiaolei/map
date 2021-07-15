@@ -131,15 +131,7 @@
             // alert('您的位置：' + r.point.lng + ',' + r.point.lat);
 
             marker.enableDragging(); //标注可拖拽
-            //marker.disableDragging();           // 不可拖拽
-
-            // 开启事件监听
-            marker.addEventListener("dragend", function (e) {
-                var x = e.point.lng; //经度
-                var y = e.point.lat; //纬度
-                //alert("拖到的地点的经纬度：" + x + "，" + y);
-                local.search("写字楼");
-            });
+            local.search("写字楼");
         }
     }, {enableHighAccuracy: true});
 </script>
