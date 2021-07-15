@@ -28,8 +28,12 @@
             z-index: 99;
         }
 
+        #container {
+            height: 80%;
+        }
+
         .bottom-panel {
-            position: fixed;
+            /*position: fixed;*/
             background: #fff;
             z-index: 99;
             left: 0;
@@ -37,7 +41,7 @@
             bottom: 0;
             height: 30%;
             overflow-y: auto;
-            display: none;
+            /*display: none;*/
         }
 
         .search-result .search-result-item {
@@ -123,10 +127,10 @@
                     searchResultDiv.append(itemHtml);
                 }
 
-                $('.bottom-panel').show();
+                //$('.bottom-panel').show();
                 console.log(addresses);
             } else {
-                $('.bottom-panel').hide();
+                $("#searchResult").empty().append('<p>无搜索结果。</p>')
                 console.error('Error status: ' + local.getStatus());
             }
         }
@@ -136,6 +140,7 @@
     var local = new BMapGL.LocalSearch(map, options);
     var offsetY = 0;
     var radius = 300;
+    var keywords = ['小区', '学校', '大厦', '餐馆', '银行', '公司', '公园', '地铁', '酒店'];
     geolocation.getCurrentPosition(function (r) {
         if (this.getStatus() === BMAP_STATUS_SUCCESS) {
             // var point = new BMap.Point(116.400244, 39.92556);
@@ -145,19 +150,20 @@
             map.panTo(r.point);
             // alert('您的位置：' + r.point.lng + ',' + r.point.lat);
 
-            //将地图中心移动到可视区中点
-            //var centerPixel = map.pointToOverlayPixel(map.getCenter());
+            //获得移动之后地图中心点的像素位置
+            var pixel = map.pointToOverlayPixel(map.getCenter());
+            //获得定位图标所在位置在地图上的地理位置，实际上定位图标的像素位置就在地图中心像素位置相应的偏移量处
+            var point = map.overlayPixelToPoint(new BMapGL.Pixel(pixel.x, pixel.y - offsetY));
             //通过设置地图的中心点，使定位点显示在手机上部分区域
-            //map.setCenter(map.overlayPixelToPoint({x: centerPixel.x, y: centerPixel.y + offsetY}));
+            map.setCenter(point);
 
-            local.searchNearby(['小区', '学校', '大厦', '餐馆', '店铺', '公司', '公园', '地铁', '酒店'], r.point, radius);
+            local.searchNearby(keywords, r.point, radius);
         }
     });
 
     map.addEventListener('dragend', function () {
         //获得移动之后地图中心点的像素位置
         var pixel = map.pointToOverlayPixel(map.getCenter());
-        console.log('pixel: ', pixel);
         //获得定位图标所在位置在地图上的地理位置，实际上定位图标的像素位置就在地图中心像素位置相应的偏移量处
         var point = map.overlayPixelToPoint(new BMapGL.Pixel(pixel.x, pixel.y - offsetY));
         // var mkn = new BMap.Marker(Point);
@@ -169,9 +175,9 @@
         marker = new BMapGL.Marker(new BMapGL.Point(point.lng, point.lat));
         map.addOverlay(marker);
         console.log('center: ', point);
-        local.searchNearby("写字楼", map.getCenter(), radius);
+        local.searchNearby("写字楼", point, radius);
 
-        $('.location').empty().append('坐标：' + map.getCenter().lng + ', ' + map.getCenter().lat);
+        $('.location').empty().append('坐标：' + point.lng + ', ' + point.lat);
     });
 </script>
 </body>
