@@ -28,7 +28,7 @@
             z-index: 99;
         }
 
-        .search-result {
+        .bottom-panel {
             position: fixed;
             background: #fff;
             z-index: 99;
@@ -56,6 +56,12 @@
             font-size: 12px;
             color: gray;
         }
+
+        .location {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-bottom: 1px solid #f3f3f3;
+        }
     </style>
     <script type="text/javascript"
             src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=7Cc5Kmn672miPzG4qQhvlOrERcXMMinq"></script>
@@ -66,7 +72,10 @@
 </head>
 <body>
 <div id="container"></div>
-<div class="search-result" id="searchResult"></div>
+<div class="bottom-panel">
+    <div class="location"></div>
+    <div class="search-result" id="searchResult"></div>
+</div>
 <script>
     var geolocation = new BMapGL.Geolocation();
     // DHL大厦: 116.525382,39.788472
@@ -115,7 +124,7 @@
                     searchResultDiv.append(itemHtml);
                 }
 
-                searchResultDiv.show();
+                $('.bottom-panel').show();
                 console.log(addresses);
             }
         }
@@ -138,7 +147,7 @@
             //通过设置地图的中心点，使定位点显示在手机上部分区域
             //map.setCenter(map.overlayPixelToPoint({x: centerPixel.x, y: centerPixel.y + offsetY}));
 
-            local.search("写字楼", new BMapGL.Point(116.525382, 39.788472), 100);
+            local.searchNearby("写字楼", new BMapGL.Point(116.525382, 39.788472), 100);
         }
     });
 
@@ -150,14 +159,16 @@
         var point = map.overlayPixelToPoint(new BMapGL.Pixel(pixel.x, pixel.y - offsetY));
         // var mkn = new BMap.Marker(Point);
         // map.addOverlay(mkn);
-        if(marker){
+        if (marker) {
             map.removeOverlay(marker);
             marker = null;
         }
         marker = new BMapGL.Marker(new BMapGL.Point(point.lng, point.lat));
         map.addOverlay(marker);
         console.log('center: ', point);
-        local.search("写字楼", point, 1000);
+        local.searchNearby("写字楼", point, 1000);
+
+        $('.location').empty().append('坐标：' + point.lng + ', ' + point.lat);
     });
 </script>
 </body>
