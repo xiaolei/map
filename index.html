@@ -135,7 +135,7 @@
     var marker;
     var local = new BMapGL.LocalSearch(map, options);
     var offsetY = 0;
-    var radius = 200;
+    var radius = 300;
     geolocation.getCurrentPosition(function (r) {
         if (this.getStatus() === BMAP_STATUS_SUCCESS) {
             // var point = new BMap.Point(116.400244, 39.92556);
@@ -150,7 +150,7 @@
             //通过设置地图的中心点，使定位点显示在手机上部分区域
             //map.setCenter(map.overlayPixelToPoint({x: centerPixel.x, y: centerPixel.y + offsetY}));
 
-            local.searchNearby(['小区', '学校', '大厦', '餐馆', '店铺', '公司', '公园', '地铁'], r.point, radius);
+            local.searchNearby(['小区', '学校', '大厦', '餐馆', '店铺', '公司', '公园', '地铁', '酒店'], r.point, radius);
         }
     });
 
