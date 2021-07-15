@@ -78,7 +78,6 @@
 </div>
 <script>
     var geolocation = new BMapGL.Geolocation();
-    // DHL大厦: 116.525382,39.788472
     var map = new BMapGL.Map('container');
     map.centerAndZoom(new BMapGL.Point(116.525382, 39.788472), 12);
     map.enableScrollWheelZoom(true);      //开启滚轮缩放
@@ -136,7 +135,7 @@
     var marker;
     var local = new BMapGL.LocalSearch(map, options);
     var offsetY = 0;
-    var radius = 500;
+    var radius = 200;
     geolocation.getCurrentPosition(function (r) {
         if (this.getStatus() === BMAP_STATUS_SUCCESS) {
             // var point = new BMap.Point(116.400244, 39.92556);
