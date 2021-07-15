@@ -123,6 +123,7 @@
 
     var marker;
     var local = new BMapGL.LocalSearch(map, options);
+    var offsetY = 0;
     geolocation.getCurrentPosition(function (r) {
         if (this.getStatus() === BMAP_STATUS_SUCCESS) {
             // var point = new BMap.Point(116.400244, 39.92556);
@@ -132,7 +133,6 @@
             map.panTo(r.point);
             // alert('您的位置：' + r.point.lng + ',' + r.point.lat);
 
-            let offsetY = 0;
             //将地图中心移动到可视区中点
             //var centerPixel = map.pointToOverlayPixel(map.getCenter());
             //通过设置地图的中心点，使定位点显示在手机上部分区域
@@ -144,19 +144,20 @@
 
     map.addEventListener('dragend', function () {
         //获得移动之后地图中心点的像素位置
-        //var pixel = map.pointToOverlayPixel(map.getCenter());
+        var pixel = map.pointToOverlayPixel(map.getCenter());
+        console.log('pixel: ', pixel);
         //获得定位图标所在位置在地图上的地理位置，实际上定位图标的像素位置就在地图中心像素位置相应的偏移量处
-        //var Point = map.overlayPixelToPoint({x: pixel.x, y: pixel.y - offsetY});
+        var point = map.overlayPixelToPoint(new BMapGL.Pixel(pixel.x, pixel.y - offsetY));
         // var mkn = new BMap.Marker(Point);
         // map.addOverlay(mkn);
         if(marker){
             map.removeOverlay(marker);
             marker = null;
         }
-        marker = new BMapGL.Marker(map.getCenter());
+        marker = new BMapGL.Marker(new BMapGL.Point(point.lng, point.lat));
         map.addOverlay(marker);
-        console.log('center: ', map.getCenter());
-        local.search("写字楼", map.getCenter(), 100);
+        console.log('center: ', point);
+        local.search("写字楼", point, 1000);
     });
 </script>
 </body>
