@@ -119,11 +119,8 @@
             }
         }
     };
-
-
+    
     var local = new BMapGL.LocalSearch(map, options);
-    local.search("写字楼");
-    /*
     geolocation.getCurrentPosition(function (r) {
         if (this.getStatus() === BMAP_STATUS_SUCCESS) {
             // var point = new BMap.Point(116.400244, 39.92556);
@@ -141,11 +138,10 @@
                 var x = e.point.lng; //经度
                 var y = e.point.lat; //纬度
                 //alert("拖到的地点的经纬度：" + x + "，" + y);
-                local.search(["公司","写字楼"]);
+                local.search("写字楼");
             });
         }
     }, {enableHighAccuracy: true});
-    */
 </script>
 </body>
 </html>
