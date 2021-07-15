@@ -29,7 +29,7 @@
         }
 
         #container {
-            height: 80%;
+            height: 70%;
         }
 
         .bottom-panel {
@@ -95,16 +95,13 @@
             if (local.getStatus() === BMAP_STATUS_SUCCESS) {
                 let searchResultDiv = $("#searchResult");
                 searchResultDiv.empty();
-                var addresses = [];
-                for (var i = 0; i < results.getCurrentNumPois(); i++) {
-                    let item = results.getPoi(i);
-                    addresses.push(results.getPoi(i).title + ", " + results.getPoi(i).address);
+                for (let i = 0; i < keywords.length; i++) {
+                    let resultsPerKeyword = results[i].getCurrentNumPois();
+                    let item = resultsPerKeyword.getPoi(i);
                     let itemHtml = '<div class="search-result-item"><div class="title">' + item.title + '</div>' +
                         '<div class="address">' + item.address + '</div></div>';
                     searchResultDiv.append(itemHtml);
                 }
-
-                console.log(addresses);
             } else {
                 $("#searchResult").empty().append('<p>无搜索结果。</p>')
                 console.error('Error status: ' + local.getStatus());
@@ -138,7 +135,7 @@
     });
 
     geolocation.getCurrentPosition(function (r) {
-        if (this.getStatus() === BMAP_STATUS_SUCCESS) {
+        if (geolocation.getStatus() === BMAP_STATUS_SUCCESS) {
             map.centerAndZoom(r.point, 15);
             marker = new BMapGL.Marker(r.point);
             map.addOverlay(marker);
