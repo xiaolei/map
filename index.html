@@ -83,7 +83,7 @@
 <script>
     var marker = null;
     var radius = 500;
-    var keywords = ['小区', '学校', '大厦', '餐馆', '银行', '公司', '公园', '地铁', '酒店'];
+    var keywords = '小区,学校,大厦,餐馆,银行,公司,公园,地铁,酒店';
     var geolocation = new BMapGL.Geolocation();
     var map = new BMapGL.Map('container');
     map.centerAndZoom(new BMapGL.Point(116.525382, 39.788472), 12);
@@ -93,11 +93,11 @@
     var options = {
         onSearchComplete: function (results) {
             if (local.getStatus() === BMAP_STATUS_SUCCESS) {
+                console.log('results: ', results);
                 let searchResultDiv = $("#searchResult");
                 searchResultDiv.empty();
-                for (let i = 0; i < keywords.length; i++) {
-                    let resultsPerKeyword = results[i].getCurrentNumPois();
-                    let item = resultsPerKeyword.getPoi(i);
+                for (let i = 0; i < results.getCurrentNumPois(); i++) {
+                    let item = results.getPoi(i);
                     let itemHtml = '<div class="search-result-item"><div class="title">' + item.title + '</div>' +
                         '<div class="address">' + item.address + '</div></div>';
                     searchResultDiv.append(itemHtml);
