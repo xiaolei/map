@@ -130,7 +130,6 @@
     var fallbackRadius = 1000;
     var isFallbackSearch = false;
     var keywords = ['大厦', '公司', '小区', '学校', '医院', '商铺', '超市', '酒店', '银行'];
-    var geolocation = new BMapGL.Geolocation();
     var map = new BMapGL.Map('map');
     map.centerAndZoom(targetLocation, 15);
     map.enableScrollWheelZoom(true);
@@ -160,6 +159,7 @@
                         searchResultDiv.append(itemHtml);
                     }
                 }
+                $('.bottom-panel')[0].scrollTop = 0;
             } else {
                 console.error('Error status: ' + local.getStatus());
                 if (isFallbackSearch) {
@@ -194,21 +194,19 @@
         alert(e.message);
     });
 
-    /*
+    var geolocation = new BMapGL.Geolocation();
     geolocation.getCurrentPosition(function (r) {
         if (geolocation.getStatus() === BMAP_STATUS_SUCCESS) {
             map.centerAndZoom(r.point, 15);
-            marker = new BMapGL.Marker(r.point);
-            map.addOverlay(marker);
-            map.panTo(r.point);
             map.setCenter(map.getCenter());
             local.searchNearby(keywords, r.point, radius);
+        } else {
+            console.error(r);
         }
     });
-    */
 
     map.addEventListener('dragend', function () {
-        doBounce($('.pin-icon'), 1, '15px', 300);
+        doBounce($('.pin-icon'), 1, '20px', 300);
         let point = map.getCenter();
         local.searchNearby(keywords, point, radius);
         $('.location').show().empty().append('坐标：' + point.lng + ', ' + point.lat);
