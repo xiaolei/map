@@ -196,7 +196,7 @@
     */
 
     map.addEventListener('dragend', function () {
-        doBounce($('.pin-icon'), 1, '10px', 300);
+        doBounce($('.pin-icon'), 1, '15px', 300);
         let point = map.getCenter();
         local.searchNearby(keywords, point, radius);
         $('.location').show().empty().append('坐标：' + point.lng + ', ' + point.lat);
