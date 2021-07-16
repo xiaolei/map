@@ -123,7 +123,6 @@
         }
     });
 
-    var targetLocation = new BMapGL.Point(116.525382, 39.788472);
     var searchResult = [];
     var marker = null;
     var radius = 200;
@@ -131,14 +130,9 @@
     var isFallbackSearch = false;
     var keywords = ['大厦', '公司', '小区', '学校', '医院', '商铺', '超市', '酒店', '银行'];
     var map = new BMapGL.Map('map');
-    map.centerAndZoom(targetLocation, 15);
     map.enableScrollWheelZoom(true);
     map.enableDragging();
     map.disableInertialDragging(); //禁用地图惯性拖拽
-
-    // 添加标记点。
-    marker = new BMapGL.Marker(targetLocation);
-    map.addOverlay(marker);
 
     var options = {
         pageCapacity: 5,
@@ -200,6 +194,9 @@
             map.centerAndZoom(r.point, 15);
             map.setCenter(map.getCenter());
             local.searchNearby(keywords, r.point, radius);
+
+            marker = new BMapGL.Marker(r.point);
+            map.addOverlay(marker);
         } else {
             console.error(r);
         }
