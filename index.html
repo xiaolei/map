@@ -28,12 +28,30 @@
             z-index: 99;
         }
 
-        #container {
+        .map-container {
             height: 70%;
+            position: relative;
+        }
+
+        .pin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: transparent;
+        }
+
+        .pin-icon {
+            width: 40px;
+            height: auto;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
         }
 
         .bottom-panel {
-            /*position: fixed;*/
             background: #fff;
             z-index: 99;
             left: 0;
@@ -41,7 +59,6 @@
             bottom: 0;
             height: 30%;
             overflow-y: auto;
-            /*display: none;*/
         }
 
         .search-result .search-result-item {
@@ -76,12 +93,24 @@
     <title>拖拽地图搜索附近地点</title>
 </head>
 <body>
-<div id="container"></div>
+<div class="map-container">
+    <div id="map"></div>
+    <div class="pin">
+        <img alt="pin" class="pin-icon" src="pin.png"/>
+    </div>
+</div>
 <div class="bottom-panel">
     <div class="location"></div>
     <div class="search-result" id="searchResult"></div>
 </div>
 <script>
+    function doBounce(element, times, distance, speed) {
+        for (i = 0; i < times; i++) {
+            element.animate({marginTop: '-=' + distance}, speed)
+                .animate({marginTop: '+=' + distance}, speed);
+        }
+    }
+
     $(".search-result").on("click", ".search-result-item", function (event) {
         if (!searchResult || searchResult.length === 0) {
             return;
@@ -93,15 +122,21 @@
         }
     });
 
+    var targetLocation = new BMapGL.Point(116.525382, 39.788472);
     var searchResult = [];
     var marker = null;
-    var radius = 100;
-    var keywords = ['大厦', '公司', '小区', '学校', '医院', '商铺', '超市'];
+    var radius = 200;
+    var keywords = ['大厦', '公司', '小区', '学校', '医院', '商铺', '超市', '酒店', '银行'];
     var geolocation = new BMapGL.Geolocation();
-    var map = new BMapGL.Map('container');
-    map.centerAndZoom(new BMapGL.Point(116.525382, 39.788472), 20);
+    var map = new BMapGL.Map('map');
+    map.centerAndZoom(targetLocation, 15);
     map.enableScrollWheelZoom(true);
     map.enableDragging();
+    map.disableInertialDragging(); //禁用地图惯性拖拽
+
+    // 添加标记点。
+    marker = new BMapGL.Marker(targetLocation);
+    map.addOverlay(marker);
 
     var options = {
         pageCapacity: 5,
@@ -161,16 +196,9 @@
     */
 
     map.addEventListener('dragend', function () {
-        if (marker) {
-            map.removeOverlay(marker);
-            marker = null;
-        }
+        doBounce($('.pin-icon'), 1, '10px', 300);
         let point = map.getCenter();
-        marker = new BMapGL.Marker(new BMapGL.Point(point.lng, point.lat));
-        map.addOverlay(marker);
-        console.log('center: ', point);
         local.searchNearby(keywords, point, radius);
-
         $('.location').show().empty().append('坐标：' + point.lng + ', ' + point.lat);
     });
 </script>
